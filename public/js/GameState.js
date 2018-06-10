@@ -2,19 +2,24 @@
 let GameState = {
   create : function(){
 
-    this.levelData = JSON.parse(this.game.cache.getText("level_01Data"));
-
-    this.createBackground();
-    this.createPlayer();
-    this.initPlayerBullets();
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-
+    this.fetchLevelDataFromFile(); // fetch data from json and load to this.levelData
+    this.createBackground(); // create moving background
+    this.createPlayer(); // create player
+    this.initPlayerBullets(); // create bullets
+    this.cursors = this.game.input.keyboard.createCursorKeys(); //input
+    this.initEnemies();
+    this.initEnemiesBullets();
+    let enemy = new Enemy(this.game,100,100,this.enemiesBullets);
+    enemy.shootBullet();
+    this.enemies.add(enemy);
   },
   update : function(){
-
+    this.game.physics.arcade.overlap(this.playerBullets, this.enemies, this.damageEnemy, null, this);
+    this.game.physics.arcade.overlap(this.enemiesBullets, this.player, this.damagePlayer, null, this);
     this.handlePlayerMovement();
-
-
+  },
+  fetchLevelDataFromFile(){
+    this.levelData = JSON.parse(this.game.cache.getText("level_01Data"));
   },
   handlePlayerMovement(){
     if(this.cursors.left.isDown || (this.game.input.activePointer.isDown && this.game.input.activePointer.position.x < 180)){
@@ -52,14 +57,21 @@ let GameState = {
     if(!bullet){
       bullet = new PlayerBullet(this.game,this.player.x,this.player.top);
       this.playerBullets.add(bullet);
-      console.log(bullet);
-      // bullet = this.playerBullets.create(this.player.position.x, this.player.position.y - 45,"bullet" ,0);
-      // bullet.anchor.setTo(0.5);
     } else {
       bullet.reset(this.player.position.x, this.player.position.y - 30);
-    }
-    // console.log(bullet);
-    // console.log(bullet.body);
+    };
     bullet.body.velocity.y = this.levelData.bulletsData.speed;
+  },
+  initEnemies() {
+    this.enemies = this.add.group();
+    this.enemies.enableBody = true;
+  },
+  damageEnemy(bullet,enemy) {
+    enemy.damage(1);
+    bullet.kill();
+  },initEnemiesBullets(){
+    this.enemiesBullets = this.add.group();
+  }, damagePlayer() {
+    console.log("player is damaged");
   }
 };

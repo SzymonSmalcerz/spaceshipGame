@@ -11,11 +11,12 @@ let LoadState = {
 
     this.load.image("background", "assets/background.png");
     this.load.image("bullet", "assets/bullet.png");
+    this.load.image("enemyParticle", "assets/bullet.png");
 
     this.load.image("spaceShallow","assets/spaceShallow.png");
     this.load.image("spaceDeep","assets/spaceDeep.png");
     this.load.image("spaceDeepest","assets/spaceDeepest.png");
-    
+
     this.load.spritesheet("ship1", "assets/ship1.png",128,125,3);
     this.load.spritesheet("ship2", "assets/ship2.png",200,125,3);
     this.load.spritesheet("ship3", "assets/ship3.png",145,125,3);
